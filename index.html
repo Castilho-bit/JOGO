@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stickman Fighter 2D - Arena de Luta</title>
+    <!-- Google Fonts modernas: Outfit e Orbitron para estilo futurista/cyberpunk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;600;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Container Geral do Jogo -->
+    <div id="game-app">
+
+        <!-- CABEÇALHO GLOBAL (HUD Superior) -->
+        <header id="global-header">
+            <div class="header-stat">
+                <span class="stat-icon">🪙</span>
+                <div class="stat-info">
+                    <small>Skill Coins</small>
+                    <strong class="val-coins text-gold">0</strong>
+                </div>
+            </div>
+
+            <div class="header-stat header-xp-box">
+                <span class="stat-icon">⭐</span>
+                <div class="stat-info">
+                    <small>Nível <strong class="val-level text-cyan">1</strong></small>
+                    <div class="xp-bar-container">
+                        <div id="header-xp-fill" class="xp-bar-fill"></div>
+                    </div>
+                    <span id="header-xp-text" class="xp-bar-subtext">0 / 350 XP</span>
+                </div>
+            </div>
+
+            <div class="header-stat">
+                <span class="stat-icon">🏆</span>
+                <div class="stat-info">
+                    <small>Vitórias</small>
+                    <strong class="val-wins text-green">0</strong>
+                </div>
+            </div>
+
+            <div class="header-stat">
+                <span class="stat-icon">💀</span>
+                <div class="stat-info">
+                    <small>Derrotas</small>
+                    <strong class="val-losses text-red">0</strong>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==================== TELA 1: MENU PRINCIPAL ==================== -->
+        <section id="screen-menu" class="game-screen active">
+            <div class="menu-layout">
+                <!-- Painel Esquerdo: Logotipo e Botões de Navegação -->
+                <div class="menu-nav-panel">
+                    <div class="game-logo">
+                        <h1 class="logo-title">STICKMAN</h1>
+                        <span class="logo-subtitle">CYBER COMBAT 2D</span>
+                    </div>
+
+                    <div class="menu-buttons-list">
+                        <button class="btn-menu-action btn-primary" data-screen="modes">
+                            <span class="btn-icon">⚔️</span> JOGAR
+                        </button>
+                        <button class="btn-menu-action" id="btn-menu-arena" data-screen="modes">
+                            <span class="btn-icon">🏟️</span> MODO ARENA
+                        </button>
+                        <button class="btn-menu-action" id="btn-menu-training">
+                            <span class="btn-icon">🥋</span> TREINAMENTO
+                        </button>
+                        <button class="btn-menu-action" id="btn-menu-weapons" data-screen="shop">
+                            <span class="btn-icon">🗡️</span> ARMAS
+                        </button>
+                        <button class="btn-menu-action" id="btn-menu-items" data-screen="inventory">
+                            <span class="btn-icon">🎒</span> ITENS
+                        </button>
+                        <button class="btn-menu-action" data-screen="shop">
+                            <span class="btn-icon">🛒</span> LOJA
+                        </button>
+                        <button class="btn-menu-action btn-risk-glow" data-screen="risk">
+                            <span class="btn-icon">🎲</span> RISCO
+                        </button>
+                        <button class="btn-menu-action" data-screen="settings">
+                            <span class="btn-icon">⚙️</span> CONFIGURAÇÕES
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel Direito: Apresentação do Stickman Animado -->
+                <div class="menu-showcase-panel">
+                    <div class="showcase-card">
+                        <div class="showcase-header">
+                            <span class="badge-status">GUERREIRO PRONTO</span>
+                            <h2 class="fighter-hero-title">DOJO CYBERPUNK</h2>
+                        </div>
+                        <canvas id="menu-stickman-canvas"></canvas>
+                        <div class="showcase-controls-hint">
+                            <p>Controles de Teclado:</p>
+                            <span class="kbd-hint"><strong>A/D</strong> Mover</span>
+                            <span class="kbd-hint"><strong>W</strong> Pular</span>
+                            <span class="kbd-hint"><strong>J</strong> Golpe</span>
+                            <span class="kbd-hint"><strong>K</strong> Forte</span>
+                            <span class="kbd-hint"><strong>L</strong> Defender</span>
+                            <span class="kbd-hint"><strong>Espaço</strong> Esquivar</span>
+                            <span class="kbd-hint"><strong>E</strong> Especial</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TELA 2: SELEÇÃO DE MODOS ==================== -->
+        <section id="screen-modes" class="game-screen">
+            <div class="screen-header-bar">
+                <button class="btn-back" data-screen="menu">⬅ VOLTAR AO MENU</button>
+                <h2 class="screen-title">SELECIONE O MODO DE JOGO</h2>
+                <div></div>
+            </div>
+
+            <div class="modes-grid">
+                <!-- Modo História -->
+                <div class="mode-card">
+                    <div class="mode-badge-hot" style="background:#ff0055; color:#fff;">DIFICULDADE ALTA</div>
+                    <div class="mode-icon">📜</div>
+                    <h3 class="mode-name">Modo História</h3>
+                    <p class="mode-desc">Enfrente uma sequência implacável de 5 mestres com inteligência tática afiada e
+                        dano elevado.</p>
+                    <ul class="mode-features">
+                        <li>Fase 1: Recruta Novato (Agressivo)</li>
+                        <li>Fase 2: Guarda de Ferro (Muralha)</li>
+                        <li>Fase 3: Ninja das Sombras (Ágil)</li>
+                        <li>Fase 4: Mestre Ronin (Lâmina Flamejante)</li>
+                        <li>Fase 5: Lorde do Vazio (Boss Supremo)</li>
+                    </ul>
+                    <button id="btn-play-story" class="btn-mode-start btn-gold">INICIAR HISTÓRIA</button>
+                </div>
+
+                <!-- Modo Arena (Com Seletor de Dificuldade) -->
+                <div class="mode-card featured" id="mode-card-arena">
+                    <div class="mode-badge-hot">SOBREVIVÊNCIA INFINITA</div>
+                    <div class="mode-icon">🏟️</div>
+                    <h3 class="mode-name">Modo Arena</h3>
+                    <p class="mode-desc">Sobreviva a ondas infinitas de inimigos na Arena Cyberpunk. Escolha a sua
+                        dificuldade e encare o desafio!</p>
+
+                    <!-- Seletor de Dificuldade da Arena -->
+                    <div class="arena-diff-container">
+                        <span class="diff-picker-label">DIFICULDADE DA ARENA:</span>
+                        <div class="arena-diff-selector">
+                            <button type="button" class="btn-arena-diff active" data-diff="easy">🟢 Easy
+                                (Fácil)</button>
+                            <button type="button" class="btn-arena-diff" data-diff="medium">🟡 Medium (Médio)</button>
+                            <button type="button" class="btn-arena-diff" data-diff="hard">🔴 Hard (Difícil)</button>
+                        </div>
+                        <div id="arena-diff-desc" class="arena-diff-desc">
+                            🟢 Fácil: Inimigos mais acessíveis (+100 XP, +250 Coins/onda)
+                        </div>
+                    </div>
+
+                    <ul class="mode-features">
+                        <li>Inimigos com atributos escaláveis a cada onda</li>
+                        <li>Dificuldade define a agressividade e recompensas</li>
+                        <li>Se morrer, o Reviver reinicia a Arena da Onda 1</li>
+                    </ul>
+                    <button id="btn-play-arena" class="btn-mode-start btn-primary">ENTRAR NA ARENA</button>
+                </div>
+
+                <!-- Modo Treinamento -->
+                <div class="mode-card">
+                    <div class="mode-icon">🥋</div>
+                    <h3 class="mode-name">Treinamento</h3>
+                    <p class="mode-desc">Aperfeiçoe seus golpes, treine combos reais de 3 a 10 hits e teste novas
+                        espadas sem pressão.</p>
+                    <ul class="mode-features">
+                        <li>Boneco de treino com vida regenerativa</li>
+                        <li>Opção de boneco parado ou com IA ativa</li>
+                        <li>Sem perda de vida nem limite de tempo</li>
+                    </ul>
+                    <button id="btn-play-training" class="btn-mode-start btn-secondary">TREINAR GOLPES</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TELA 3: BATALHA (CANVAS DE COMBATE) ==================== -->
+        <section id="screen-battle" class="game-screen">
+            <!-- HUD Superior de Batalha -->
+            <div id="battle-hud-top">
+                <!-- Lado Jogador -->
+                <div class="hud-fighter-side hud-player">
+                    <div class="fighter-tag-info">
+                        <span id="hud-player-name" class="fighter-name">Stickman</span>
+                        <span id="hud-player-weapon" class="fighter-weapon-name">Espada de Madeira</span>
+                    </div>
+                    <div class="bar-container hp-bar-wrapper">
+                        <div id="hud-player-hp-fill" class="bar-fill hp-fill"></div>
+                        <span id="hud-player-hp-text" class="bar-text">100 / 100</span>
+                    </div>
+                    <div class="bar-container energy-bar-wrapper">
+                        <div id="hud-player-energy-fill" class="bar-fill energy-fill"></div>
+                        <span id="hud-player-energy-text" class="bar-text">100 / 100</span>
+                    </div>
+                </div>
+
+                <!-- Centro do HUD (Timer, Modo, Pausa) -->
+                <div class="hud-center-info">
+                    <span id="hud-mode-badge" class="hud-mode-badge">MODO HISTÓRIA - FASE 1</span>
+                    <div id="hud-battle-timer" class="hud-timer">00:00</div>
+                    <div class="hud-action-btns">
+                        <button id="btn-battle-pause" class="btn-hud-icon" title="Pausar">⏸️</button>
+                        <button id="btn-battle-quit" class="btn-hud-icon" title="Sair">🚪</button>
+                    </div>
+                </div>
+
+                <!-- Lado Inimigo -->
+                <div class="hud-fighter-side hud-enemy">
+                    <div class="fighter-tag-info">
+                        <span id="hud-enemy-name" class="fighter-name">Recruta Novato</span>
+                        <span id="hud-enemy-weapon" class="fighter-weapon-name">Espada de Madeira</span>
+                    </div>
+                    <div class="bar-container hp-bar-wrapper">
+                        <div id="hud-enemy-hp-fill" class="bar-fill hp-fill enemy-hp-fill"></div>
+                        <span id="hud-enemy-hp-text" class="bar-text">100 / 100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicador Flutuante de Combo -->
+            <div id="hud-combo-container">
+                <span id="hud-combo-count">3 HITS</span>
+                <span id="hud-combo-multiplier">1.2x DANO</span>
+            </div>
+
+            <!-- Barra de Controle do Treinamento (Apenas no Modo Treino) -->
+            <div id="battle-training-controls" style="display: none;">
+                <span>🥋 MODO TREINO ATIVO</span>
+                <button id="btn-toggle-dummy" class="btn-training-toggle">Modo Dummy: PARADO</button>
+            </div>
+
+            <!-- Canvas Principal de Renderização da Batalha -->
+            <div class="canvas-wrapper">
+                <canvas id="game-canvas"></canvas>
+            </div>
+
+            <!-- Controles Virtuais Touch (Mobile / Tablet) -->
+            <div id="touch-controls-container">
+                <!-- D-Pad Esquerdo (Mover, Pular, Agachar) -->
+                <div class="touch-dpad">
+                    <button id="btn-touch-jump" class="touch-btn touch-btn-dpad">⬆ PULAR</button>
+                    <div class="touch-dpad-row">
+                        <button id="btn-touch-left" class="touch-btn touch-btn-dpad">⬅</button>
+                        <button id="btn-touch-crouch" class="touch-btn touch-btn-dpad">⬇ AGACHAR</button>
+                        <button id="btn-touch-right" class="touch-btn touch-btn-dpad">➡</button>
+                    </div>
+                </div>
+
+                <!-- Botões de Ação Direitos -->
+                <div class="touch-actions">
+                    <div class="touch-actions-row">
+                        <button id="btn-touch-defend" class="touch-btn touch-btn-defend">🛡️ DEFESA</button>
+                        <button id="btn-touch-dodge" class="touch-btn touch-btn-dodge">💨 ESQUIVA</button>
+                        <button id="btn-touch-special" class="touch-btn touch-btn-special">⚡ ESPECIAL</button>
+                    </div>
+                    <div class="touch-actions-row">
+                        <button id="btn-touch-attack" class="touch-btn touch-btn-attack">⚔️ ATAQUE</button>
+                        <button id="btn-touch-heavy" class="touch-btn touch-btn-heavy">💥 FORTE</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TELA 4: LOJA ==================== -->
+        <section id="screen-shop" class="game-screen">
+            <div class="screen-header-bar">
+                <button class="btn-back" data-screen="menu">⬅ VOLTAR AO MENU</button>
+                <h2 class="screen-title">MERCADO NEON DE GUERRA</h2>
+                <div class="header-coins-pill">
+                    🪙 Saldo: <strong class="val-coins text-gold">0</strong>
+                </div>
+            </div>
+
+            <!-- Abas da Loja -->
+            <div class="shop-tabs-nav">
+                <button class="shop-tab-btn active" data-tab="weapons">🗡️ ESPADAS</button>
+                <button class="shop-tab-btn" data-tab="items">🎒 ITENS E ACESSÓRIOS</button>
+                <button class="shop-tab-btn" data-tab="characters">🥋 PERSONAGENS</button>
+            </div>
+
+            <!-- Grade de Produtos -->
+            <div id="shop-items-grid" class="shop-grid">
+                <!-- Inserido dinamicamente via JS -->
+            </div>
+        </section>
+
+        <!-- ==================== TELA 5: INVENTÁRIO ==================== -->
+        <section id="screen-inventory" class="game-screen">
+            <div class="screen-header-bar">
+                <button class="btn-back" data-screen="menu">⬅ VOLTAR AO MENU</button>
+                <h2 class="screen-title">INVENTÁRIO DO GUERREIRO</h2>
+                <div></div>
+            </div>
+
+            <div class="inventory-layout">
+                <!-- Visão Geral do Guerreiro Equipado -->
+                <div class="inv-preview-card">
+                    <h3 class="panel-subtitle">EQUIPAMENTO ATUAL</h3>
+                    <div class="inv-slot-row">
+                        <span class="slot-label">Personagem:</span>
+                        <strong id="inv-char-name" class="slot-val text-cyan">Stickman</strong>
+                    </div>
+                    <div class="inv-slot-row">
+                        <span class="slot-label">Espada:</span>
+                        <strong id="inv-weapon-name" class="slot-val text-gold">Espada de Madeira</strong>
+                    </div>
+
+                    <hr class="neon-divider">
+
+                    <h4 class="panel-subtitle">ATRIBUTOS TOTAIS</h4>
+                    <div class="inv-stats-grid">
+                        <div class="stat-box">
+                            <small>❤️ Vida</small>
+                            <span id="inv-stat-hp" class="text-green">100</span>
+                        </div>
+                        <div class="stat-box">
+                            <small>⚔️ Dano</small>
+                            <span id="inv-stat-dmg" class="text-red">25</span>
+                        </div>
+                        <div class="stat-box">
+                            <small>⚡ Velocidade</small>
+                            <span id="inv-stat-speed" class="text-cyan">6.0</span>
+                        </div>
+                        <div class="stat-box">
+                            <small>🛡️ Defesa</small>
+                            <span id="inv-stat-def" class="text-purple">5</span>
+                        </div>
+                        <div class="stat-box">
+                            <small>⚡ Energia</small>
+                            <span id="inv-stat-energy" class="text-yellow">100</span>
+                        </div>
+                        <div class="stat-box">
+                            <small>🎯 Crítico</small>
+                            <span id="inv-stat-crit" class="text-gold">5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Itens Possuídos para Equipar / Desequipar -->
+                <div class="inv-items-card">
+                    <h3 class="panel-subtitle">ITENS E ACESSÓRIOS</h3>
+                    <div id="inv-items-list" class="inv-items-list">
+                        <!-- Itens carregados via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TELA 6: RISCO (MINI-GAME DE MOEDA VIRTUAL) ==================== -->
+        <section id="screen-risk" class="game-screen">
+            <div class="screen-header-bar">
+                <button class="btn-back" data-screen="menu">⬅ VOLTAR AO MENU</button>
+                <h2 class="screen-title neon-red-title">🎲 ROLETA DE RISCO</h2>
+                <div class="header-coins-pill">
+                    🪙 Saldo: <strong class="val-coins text-gold">0</strong>
+                </div>
+            </div>
+
+            <div class="risk-container">
+                <div class="risk-disclaimer-banner">
+                    ⚠️ <strong>ATENÇÃO:</strong> Esta mecânica utiliza <u>EXCLUSIVAMENTE moedas virtuais do jogo (Skill
+                        Coins)</u>. Não existe dinheiro real.
+                </div>
+
+                <!-- Seletor de Modalidade / Multiplicador -->
+                <div class="risk-tier-selector">
+                    <button class="btn-risk-tier active" data-tier="2x">
+                        <span class="tier-icon">🥈</span>
+                        <div class="tier-info">
+                            <strong>Multiplicador 2x</strong>
+                            <small class="text-cyan">Chance: 10% (Risco Médio)</small>
+                        </div>
+                    </button>
+                    <button class="btn-risk-tier" data-tier="5x">
+                        <span class="tier-icon">💎</span>
+                        <div class="tier-info">
+                            <strong>Multiplicador 5x</strong>
+                            <small class="text-gold">Chance: 5% (Risco Alto)</small>
+                        </div>
+                    </button>
+                    <button class="btn-risk-tier" data-tier="50x">
+                        <span class="tier-icon">👑</span>
+                        <div class="tier-info">
+                            <strong>Jackpot 50x</strong>
+                            <small class="text-red">Chance: 1% (Risco Extremo)</small>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Mostrador Central de Probabilidade Selecionada -->
+                <div class="risk-chances-board">
+                    <div class="chance-card chance-win">
+                        <span id="risk-chance-label" class="chance-percent">10%</span>
+                        <strong>CHANCE DE GANHAR</strong>
+                        <p id="risk-tier-title" class="chance-multiplier">Multiplicador 2x (10% de Chance)</p>
+                    </div>
+                    <div class="chance-card chance-lose">
+                        <span id="risk-lose-label" class="chance-percent">90%</span>
+                        <strong>CHANCE DE PERDER</strong>
+                        <p class="chance-sub">Perda do valor apostado na rodada</p>
+                    </div>
+                </div>
+
+                <!-- Roleta Visual Animada com Ponteiro Central -->
+                <div class="roulette-arena-box">
+                    <div class="roulette-header-bar">
+                        <span class="roulette-status-badge">ROLETA VIRTUAL</span>
+                        <span class="roulette-selection-info">🎯 ZONA DE SELEÇÃO CENTRAL</span>
+                    </div>
+                    <div class="roulette-reel-viewport" id="roulette-viewport">
+                        <!-- Indicador Fixo Central de Seleção Futurista/Neon -->
+                        <div class="roulette-target-indicator" id="roulette-indicator">
+                            <div class="indicator-arrow-top">▼</div>
+                            <div class="indicator-target-frame"></div>
+                            <div class="indicator-arrow-bottom">▲</div>
+                        </div>
+
+                        <div id="risk-reel-strip" class="roulette-reel-strip">
+                            <div class="roulette-slot"><span class="slot-badge">🥈 2x</span></div>
+                            <div class="roulette-slot"><span class="slot-badge">💀 PERDEU</span></div>
+                            <div class="roulette-slot slot-jackpot"><span class="slot-badge">💎 5x</span></div>
+                            <div class="roulette-slot"><span class="slot-badge">💀 PERDEU</span></div>
+                            <div class="roulette-slot slot-jackpot"><span class="slot-badge">👑 50x</span></div>
+                        </div>
+                    </div>
+                    <div id="risk-status-text" class="risk-status-message">
+                        Escolha sua modalidade, valor da aposta e clique em ROLETAR!
+                    </div>
+                </div>
+
+                <!-- Controles de Aposta -->
+                <div id="risk-controls-box" class="risk-controls-panel">
+                    <div class="bet-input-row">
+                        <label for="risk-bet-input">VALOR DA APOSTA:</label>
+                        <input type="number" id="risk-bet-input" value="500" min="10" step="50">
+                        <span>Skill Coins</span>
+                    </div>
+
+                    <div class="bet-quick-buttons">
+                        <button class="btn-bet-quick" data-bet="100">100</button>
+                        <button class="btn-bet-quick" data-bet="500">500</button>
+                        <button class="btn-bet-quick" data-bet="1000">1.000</button>
+                        <button class="btn-bet-quick" data-bet="5000">5.000</button>
+                        <button class="btn-bet-quick btn-bet-max" data-bet="max">MÁXIMO</button>
+                    </div>
+
+                    <div class="payout-preview-row">
+                        Possível Retorno: <strong id="risk-payout-display" class="text-gold">1.000</strong> Skill Coins
+                    </div>
+
+                    <button id="btn-risk-spin" class="btn-spin-big">
+                        🎰 ROLETAR <span id="risk-bet-display">500</span> MOEDAS
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TELA 7: CONFIGURAÇÕES ==================== -->
+        <section id="screen-settings" class="game-screen">
+            <div class="screen-header-bar">
+                <button class="btn-back" data-screen="menu">⬅ VOLTAR AO MENU</button>
+                <h2 class="screen-title">CONFIGURAÇÕES DO JOGO</h2>
+                <div></div>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Configurações de Áudio -->
+                <div class="settings-card">
+                    <h3 class="panel-subtitle">🔊 SISTEMA DE ÁUDIO</h3>
+                    <div class="setting-item">
+                        <label for="setting-volume">Volume dos Efeitos Sonoros:</label>
+                        <input type="range" id="setting-volume" min="0" max="1" step="0.05" value="0.7">
+                    </div>
+                    <div class="setting-item">
+                        <button id="btn-toggle-sound" class="btn-toggle-switch">🔊 Som: Ativado</button>
+                    </div>
+                </div>
+
+                <!-- Configuração de Teclas -->
+                <div class="settings-card">
+                    <h3 class="panel-subtitle">⌨️ MAPEAMENTO DE TECLADO</h3>
+                    <p class="settings-desc">Clique no botão da ação correspondente e pressione a nova tecla desejada.
+                    </p>
+                    <div id="settings-keybinds-list" class="keybinds-list">
+                        <!-- Gerado dinamicamente via JS -->
+                    </div>
+                </div>
+
+                <!-- Resetar Progresso -->
+                <div class="settings-card danger-card">
+                    <h3 class="panel-subtitle text-red">⚠️ DADOS E SALVAMENTO</h3>
+                    <p class="settings-desc">Todo o seu progresso é gravado localmente no seu navegador via
+                        <code>localStorage</code>.</p>
+                    <button id="btn-reset-progress" class="btn-danger">
+                        🗑️ RESETAR TODO O PROGRESSO
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== MODAIS ==================== -->
+
+        <!-- MODAL DE CONFIRMAÇÃO DE RISCO (Obrigatório) -->
+        <div id="risk-confirm-modal" class="game-modal-backdrop hidden">
+            <div class="game-modal-box">
+                <div class="modal-icon">🎰</div>
+                <h3 class="modal-title">CONFIRMAÇÃO DE ROLETA</h3>
+                <p class="modal-text">
+                    Você está prestes a arriscar <strong id="risk-modal-coins" class="text-gold">500</strong> Skill
+                    Coins no <strong id="risk-modal-tier-name" class="text-cyan">Multiplicador 2x</strong>.
+                </p>
+                <div class="modal-warning-rates">
+                    <div class="rate-badge rate-green">Chance de ganhar: <strong id="risk-modal-win-rate">10%</strong>
+                        (Prêmio: <span id="risk-modal-win-val">1.000</span> moedas)</div>
+                    <div class="rate-badge rate-red">Chance de perder: <strong id="risk-modal-lose-rate">90%</strong>
+                    </div>
+                </div>
+                <p class="modal-subtext">Esta mecânica utiliza moedas puramente virtuais do jogo.</p>
+                <div class="modal-buttons-row">
+                    <button id="btn-risk-confirm-yes" class="btn-modal btn-confirm-yes">CONFIRMAR E GIRAR</button>
+                    <button id="btn-risk-confirm-no" class="btn-modal btn-confirm-no">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE VITÓRIA -->
+        <div id="modal-victory" class="game-modal-backdrop hidden">
+            <div class="game-modal-box victory-box">
+                <div class="modal-icon">🏆</div>
+                <h2 class="modal-title neon-gold-title">VITÓRIA!</h2>
+                <div class="rewards-banner">
+                    <span id="victory-coins" class="reward-tag">+500 Skill Coins</span>
+                    <span id="victory-xp" class="reward-tag">+250 XP</span>
+                </div>
+                <div class="match-stats-table">
+                    <div class="stat-row">
+                        <span>Dano Causado:</span>
+                        <strong id="victory-damage">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Maior Combo:</span>
+                        <strong id="victory-max-combo">0 HITS</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Tempo de Batalha:</span>
+                        <strong id="victory-time">00:00</strong>
+                    </div>
+                </div>
+                <div class="modal-buttons-row">
+                    <button id="btn-victory-continue" class="btn-modal btn-primary">CONTINUAR</button>
+                    <button id="btn-victory-retry" class="btn-modal btn-secondary">NOVAMENTE</button>
+                    <button id="btn-victory-menu" class="btn-modal btn-dark">MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE MORTE / REVIVER -->
+        <div id="modal-defeat" class="game-modal-backdrop hidden">
+            <div class="game-modal-box defeat-box">
+                <div class="modal-icon">💀</div>
+                <h2 id="defeat-modal-title" class="modal-title neon-red-title">DERROTA</h2>
+                <p id="defeat-modal-sub" class="modal-revive-hint">O seu guerreiro caiu em combate.</p>
+                <div class="match-stats-table">
+                    <div class="stat-row">
+                        <span>Dano Causado:</span>
+                        <strong id="defeat-damage">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Maior Combo:</span>
+                        <strong id="defeat-max-combo">0 HITS</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Tempo de Luta:</span>
+                        <strong id="defeat-time">00:00</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Skill Coins:</span>
+                        <strong id="defeat-current-coins" class="text-gold">0</strong>
+                    </div>
+                </div>
+                <div class="modal-buttons-row">
+                    <button id="btn-defeat-revive" class="btn-modal btn-primary btn-revive">
+                        <span class="btn-icon">⚡</span> REVIVER
+                    </button>
+                    <button id="btn-defeat-retry" class="btn-modal btn-secondary" style="display:none;">TENTAR
+                        NOVAMENTE</button>
+                    <button id="btn-defeat-menu" class="btn-modal btn-dark">
+                        <span class="btn-icon">🏠</span> MENU PRINCIPAL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts do Jogo em Ordem de Dependência -->
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/weapons_items.js"></script>
+    <script src="js/stickman.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/risk.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
