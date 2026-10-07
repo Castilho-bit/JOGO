@@ -201,12 +201,12 @@ class Game {
                 this.battleEnded = false;
 
                 if (this.gameMode === 'story') {
-                    if (this.storyStage < 5) {
+                    if (this.storyStage < 8) {
                         this.storyStage++;
                         this.startBattle('story', this.storyStage);
                     } else {
-                        alert("🏆 PARABÉNS! Você derrotou todos os mestres do Modo História!");
-                        this.switchScreen('menu');
+                        // Derrotou Chronos no estágio 8!
+                        this.checkSecretCharacterUnlock();
                     }
                 } else if (this.gameMode === 'arena') {
                     this.arenaWave++;
@@ -214,6 +214,30 @@ class Game {
                 } else {
                     this.switchScreen('menu');
                 }
+            });
+        }
+
+        // Botões do Modal de Desbloqueio do Personagem Secreto (Chronos)
+        const btnSecretEquip = document.getElementById('btn-secret-equip-now');
+        if (btnSecretEquip) {
+            btnSecretEquip.addEventListener('click', () => {
+                audioSystem.playBuy();
+                const secretModal = document.getElementById('modal-secret-unlock');
+                if (secretModal) secretModal.classList.add('hidden');
+                this.saveSystem.data.selectedCharacter = 'chronos';
+                this.saveSystem.save();
+                this.initMenuStickman();
+                this.switchScreen('menu');
+            });
+        }
+
+        const btnSecretClose = document.getElementById('btn-secret-close');
+        if (btnSecretClose) {
+            btnSecretClose.addEventListener('click', () => {
+                audioSystem.playClick();
+                const secretModal = document.getElementById('modal-secret-unlock');
+                if (secretModal) secretModal.classList.add('hidden');
+                this.switchScreen('menu');
             });
         }
 
@@ -498,27 +522,30 @@ class Game {
                     weaponId: 'ferro',
                     name: 'Recruta Novato (Agressivo)',
                     difficulty: 'medium',
-                    bonusHp: 35,
-                    bonusDmg: 7
+                    bossType: 'standard',
+                    bonusHp: 25,
+                    bonusDmg: 5
                 };
             } else if (this.storyStage === 2) {
                 enemyConfig = {
                     charId: 'guerreiro',
-                    weaponId: 'ferro',
+                    weaponId: 'martelo_titan',
                     name: 'Guarda de Ferro (Muralha)',
                     difficulty: 'hard',
-                    bonusHp: 80,
-                    bonusDmg: 12,
-                    bonusDef: 8
+                    bossType: 'muralha',
+                    bonusHp: 75,
+                    bonusDmg: 9,
+                    bonusDef: 12
                 };
             } else if (this.storyStage === 3) {
                 enemyConfig = {
                     charId: 'ninja',
-                    weaponId: 'katana',
-                    name: 'Ninja das Sombras (Ágil)',
+                    weaponId: 'adagas_veneno',
+                    name: 'Ninja das Sombras (Vento Silencioso)',
                     difficulty: 'hard',
-                    bonusHp: 80,
-                    bonusDmg: 18,
+                    bossType: 'ninja',
+                    bonusHp: 70,
+                    bonusDmg: 14,
                     bonusSpeed: 1.5
                 };
             } else if (this.storyStage === 4) {
@@ -526,21 +553,61 @@ class Game {
                     charId: 'samurai',
                     weaponId: 'flamejante',
                     name: 'Mestre Ronin (Lâmina Flamejante)',
-                    difficulty: 'insane',
-                    bonusHp: 140,
-                    bonusDmg: 26,
+                    difficulty: 'hard',
+                    bossType: 'ronin',
+                    bonusHp: 110,
+                    bonusDmg: 20,
                     bonusDef: 6
                 };
-            } else {
+            } else if (this.storyStage === 5) {
+                // NOVO BOSS 1: Sentinela Celeste
+                enemyConfig = {
+                    charId: 'valquiria',
+                    weaponId: 'lanca_plasma',
+                    name: 'Valkyria Neon (Sentinela Celeste - BOSS)',
+                    difficulty: 'hard',
+                    bossType: 'valquiria',
+                    bonusHp: 145,
+                    bonusDmg: 24,
+                    bonusSpeed: 1.8
+                };
+            } else if (this.storyStage === 6) {
+                // NOVO BOSS 2: Demolidor Mecha
+                enemyConfig = {
+                    charId: 'colossus',
+                    weaponId: 'martelo_titan',
+                    name: 'Titã Goliath (Demolidor Mecha - BOSS)',
+                    difficulty: 'insane',
+                    bossType: 'colossus',
+                    bonusHp: 210,
+                    bonusDmg: 30,
+                    bonusDef: 18
+                };
+            } else if (this.storyStage === 7) {
+                // NOVO BOSS 3: Flagelo Dimensional
                 enemyConfig = {
                     charId: 'shadow',
-                    weaponId: 'sombria',
-                    name: 'Lorde do Vazio (BOSS SUPREMO)',
+                    weaponId: 'foice_espectral',
+                    name: 'Lorde do Vazio (Flagelo Cósmico - BOSS)',
                     difficulty: 'insane',
-                    bonusHp: 220,
-                    bonusDmg: 38,
-                    bonusDef: 12,
+                    bossType: 'shadow',
+                    bonusHp: 240,
+                    bonusDmg: 34,
+                    bonusDef: 14,
                     bonusSpeed: 1.0
+                };
+            } else {
+                // GRANDE BOSS FINAL: Chronos
+                enemyConfig = {
+                    charId: 'chronos',
+                    weaponId: 'espada_cronos',
+                    name: 'Chronos (Soberano do Tempo - BOSS FINAL)',
+                    difficulty: 'insane',
+                    bossType: 'chronos',
+                    bonusHp: 320,
+                    bonusDmg: 42,
+                    bonusDef: 18,
+                    bonusSpeed: 1.4
                 };
             }
         } else if (mode === 'arena') {
@@ -549,8 +616,8 @@ class Game {
                 this.arenaDifficulty = difficulty;
             }
 
-            const chars = ['stickman', 'guerreiro', 'ninja', 'samurai', 'shadow'];
-            const weapons = ['madeira', 'ferro', 'katana', 'flamejante', 'sombria'];
+            const chars = ['stickman', 'guerreiro', 'ninja', 'samurai', 'mago', 'valquiria', 'colossus', 'shadow'];
+            const weapons = ['madeira', 'ferro', 'adagas_veneno', 'katana', 'lanca_plasma', 'flamejante', 'martelo_titan', 'foice_espectral', 'sombria'];
             const charIdx = Math.min(chars.length - 1, Math.floor((this.arenaWave - 1) / 2));
             const wepIdx = Math.min(weapons.length - 1, Math.floor((this.arenaWave - 1) / 2));
 
@@ -585,6 +652,7 @@ class Game {
                 weaponId: weapons[wepIdx],
                 name: `Gladiador Onda ${this.arenaWave} (${diffNames[diff] || 'FÁCIL'})`,
                 difficulty: aiDiff,
+                bossType: 'standard',
                 bonusHp: this.arenaWave * hpPerWave,
                 bonusDmg: this.arenaWave * dmgPerWave,
                 bonusDef: defBonus,
@@ -595,7 +663,8 @@ class Game {
                 charId: 'stickman',
                 weaponId: 'madeira',
                 name: 'Boneco de Treino',
-                difficulty: this.trainingDummyMode === 'parado' ? 'treino_parado' : 'medium'
+                difficulty: this.trainingDummyMode === 'parado' ? 'treino_parado' : 'medium',
+                bossType: 'standard'
             };
         }
 
@@ -624,8 +693,8 @@ class Game {
             this.enemy.speed += enemyConfig.bonusSpeed;
         }
 
-        // Configurar IA
-        this.ai.setDifficulty(enemyConfig.difficulty);
+        // Configurar IA com arquétipo de boss
+        this.ai.setDifficulty(enemyConfig.difficulty, enemyConfig.bossType || 'standard');
 
         // Atualizar HUD
         this.updateHUDStaticInfo();
@@ -652,7 +721,7 @@ class Game {
 
         if (modeBadge) {
             if (this.gameMode === 'story') {
-                modeBadge.innerText = `MODO HISTÓRIA - FASE ${this.storyStage} / 5`;
+                modeBadge.innerText = `MODO HISTÓRIA - FASE ${this.storyStage} / 8`;
             } else if (this.gameMode === 'arena') {
                 const diffMap = { easy: 'FÁCIL', medium: 'MÉDIO', hard: 'DIFÍCIL' };
                 modeBadge.innerText = `MODO ARENA [${diffMap[this.arenaDifficulty] || 'FÁCIL'}] - ONDA ${this.arenaWave}`;
@@ -916,26 +985,47 @@ class Game {
         audioSystem.playVictory();
         this.saveSystem.recordBattleResult(true);
 
-        // Recompensas balanceadas de XP e Moedas
-        let earnedCoins = 250;
-        let earnedXp = 75;
+        // Recompensas balanceadas e ampliadas de XP e Moedas
+        let earnedCoins = 450;
+        let earnedXp = 120;
 
         if (this.gameMode === 'story') {
-            const storyCoins = [250, 350, 500, 750, 1200];
-            const storyXp = [75, 110, 160, 220, 300];
-            earnedCoins = storyCoins[this.storyStage - 1] || 500;
-            earnedXp = storyXp[this.storyStage - 1] || 150;
+            const storyCoins = [450, 750, 1100, 1600, 2300, 3200, 4500, 7000];
+            const storyXp = [120, 180, 250, 350, 480, 650, 850, 1500];
+            earnedCoins = storyCoins[this.storyStage - 1] || 1000;
+            earnedXp = storyXp[this.storyStage - 1] || 350;
         } else if (this.gameMode === 'arena') {
             const diff = this.arenaDifficulty || 'easy';
-            const mult = diff === 'easy' ? 1.0 : diff === 'medium' ? 1.4 : 2.0;
-            earnedCoins = Math.round(120 * this.arenaWave * mult);
-            earnedXp = Math.round(40 * this.arenaWave * mult);
+            const mult = diff === 'easy' ? 1.0 : diff === 'medium' ? 1.45 : 2.1;
+            earnedCoins = Math.round(220 * this.arenaWave * mult);
+            if (this.arenaWave % 3 === 0) {
+                earnedCoins += 500; // Bônus de marco de sobrevivência na Arena
+            }
+            earnedXp = Math.round(65 * this.arenaWave * mult);
         } else if (this.gameMode === 'training') {
             earnedCoins = 0;
             earnedXp = 0;
         }
 
-        this.saveSystem.addCoins(earnedCoins);
+        // Bônus adicional de combo
+        let comboBonusCoins = 0;
+        if (this.combatSystem.maxCombo >= 15) {
+            comboBonusCoins = 600;
+        } else if (this.combatSystem.maxCombo >= 10) {
+            comboBonusCoins = 350;
+        } else if (this.combatSystem.maxCombo >= 5) {
+            comboBonusCoins = 150;
+        }
+
+        // Bônus de maestria por preservar a vida (HP >= 70%)
+        let flawlessBonusCoins = 0;
+        if (this.player && (this.player.hp / this.player.maxHp) >= 0.70 && this.gameMode !== 'training') {
+            flawlessBonusCoins = 300;
+        }
+
+        const totalEarnedCoins = earnedCoins + comboBonusCoins + flawlessBonusCoins;
+
+        this.saveSystem.addCoins(totalEarnedCoins);
         this.saveSystem.addXP(earnedXp);
 
         // Preencher modal de vitória
@@ -946,7 +1036,12 @@ class Game {
         const textCombo = document.getElementById('victory-max-combo');
         const textTime = document.getElementById('victory-time');
 
-        if (textCoins) textCoins.innerText = `+${earnedCoins.toLocaleString('pt-BR')} Skill Coins`;
+        let bonusNote = '';
+        if (comboBonusCoins > 0 || flawlessBonusCoins > 0) {
+            bonusNote = ` (Bônus: +${comboBonusCoins + flawlessBonusCoins})`;
+        }
+
+        if (textCoins) textCoins.innerText = `+${totalEarnedCoins.toLocaleString('pt-BR')} Skill Coins${bonusNote}`;
         if (textXp) textXp.innerText = `+${earnedXp.toLocaleString('pt-BR')} XP`;
         if (textDmg) textDmg.innerText = this.combatSystem.totalDamageDealt;
         if (textCombo) textCombo.innerText = `${this.combatSystem.maxCombo} HITS`;
@@ -958,6 +1053,24 @@ class Game {
         particleSystem.addConfetti(window.innerWidth / 2, window.innerHeight / 2, 80);
 
         if (modal) modal.classList.remove('hidden');
+    }
+
+    checkSecretCharacterUnlock() {
+        if (!this.saveSystem.data.unlockedCharacters.includes('chronos')) {
+            this.saveSystem.data.unlockedCharacters.push('chronos');
+            this.saveSystem.save();
+        }
+
+        const secretModal = document.getElementById('modal-secret-unlock');
+        if (secretModal) {
+            secretModal.classList.remove('hidden');
+            audioSystem.playSecretUnlock();
+            particleSystem.addConfetti(window.innerWidth / 2, window.innerHeight / 2, 120);
+            particleSystem.triggerShake(8, 0.4);
+        } else {
+            alert("🏆 PARABÉNS! Você derrotou Chronos e desbloqueou o Personagem Secreto: Chronos, o Soberano do Tempo!");
+            this.switchScreen('menu');
+        }
     }
 
     handleDefeat() {
@@ -1034,15 +1147,32 @@ class Game {
         container.innerHTML = '';
 
         if (category === 'weapons') {
+            const perksMap = {
+                poison: { label: '🧪 Neurotoxina (Veneno)', cls: 'perk-poison' },
+                crush: { label: '🛡️ Quebra-Guarda & Impacto', cls: 'perk-crush' },
+                lightning: { label: '⚡ Descarga Elétrica', cls: 'perk-lightning' },
+                lifesteal: { label: '💚 Vampirismo (6% HP)', cls: 'perk-lifesteal' },
+                prism: { label: '✨ Lâmina Estelar (28% Crit)', cls: 'perk-prism' },
+                fire: { label: '🔥 Labaredas Incandescentes', cls: 'perk-fire' },
+                shadow: { label: '🌑 Penetração do Vazio', cls: 'perk-shadow' }
+            };
+
             for (const [id, w] of Object.entries(WEAPONS_DATA)) {
                 const isUnlocked = this.saveSystem.data.unlockedWeapons.includes(id);
                 const isEquipped = this.saveSystem.data.equippedWeapon === id;
+
+                let perkHtml = '';
+                if (w.specialEffect && perksMap[w.specialEffect]) {
+                    const p = perksMap[w.specialEffect];
+                    perkHtml = `<div class="weapon-perk-badge ${p.cls}">${p.label}</div>`;
+                }
 
                 const card = document.createElement('div');
                 card.className = `shop-card ${isEquipped ? 'equipped' : ''}`;
                 card.innerHTML = `
                     <div class="shop-card-icon" style="color:${w.color}; text-shadow: 0 0 10px ${w.glowColor}">🗡️</div>
                     <h3 class="shop-card-title">${w.name}</h3>
+                    ${perkHtml}
                     <p class="shop-card-desc">${w.desc}</p>
                     <div class="shop-stats-row">
                         <span>⚔️ Dano: <strong>${w.damage}</strong></span>
@@ -1135,13 +1265,21 @@ class Game {
             for (const [id, char] of Object.entries(CHARACTERS_DATA)) {
                 const isUnlocked = this.saveSystem.data.unlockedCharacters.includes(id);
                 const isEquipped = this.saveSystem.data.selectedCharacter === id;
+                const isSecretLocked = char.isSecret && !isUnlocked;
+
+                const skillBadge = char.skillName ? `<div class="shop-char-skill-badge">🌀 Especial: <strong>${char.skillName}</strong></div>` : '';
+                const skillDesc = char.skillDesc ? `<p class="shop-char-skill-desc">${char.skillDesc}</p>` : '';
+                const secretHint = isSecretLocked ? `<div class="secret-char-hint">${char.secretUnlockHint}</div>` : '';
 
                 const card = document.createElement('div');
-                card.className = `shop-card ${isEquipped ? 'equipped' : ''}`;
+                card.className = `shop-card ${isEquipped ? 'equipped' : ''} ${isSecretLocked ? 'secret-locked-card' : ''}`;
                 card.innerHTML = `
                     <div class="shop-card-icon" style="color:${char.color}; text-shadow:0 0 10px ${char.accentColor}">🥋</div>
                     <h3 class="shop-card-title">${char.name}</h3>
                     <span class="shop-card-subtitle">${char.title}</span>
+                    ${skillBadge}
+                    ${skillDesc}
+                    ${secretHint}
                     <p class="shop-card-desc">${char.desc}</p>
                     <div class="shop-stats-row">
                         <span>❤️ HP: <strong>${char.baseHp}</strong></span>
@@ -1149,16 +1287,16 @@ class Game {
                         <span>⚡ Vel: <strong>${char.baseSpeed}</strong></span>
                         <span>🛡️ Def: <strong>${char.baseDefense}</strong></span>
                     </div>
-                    <div class="shop-price-tag">${char.price === 0 ? 'INICIAL' : `🪙 ${char.price.toLocaleString('pt-BR')}`}</div>
-                    <button class="btn-shop-action ${isEquipped ? 'btn-active' : ''}">
-                        ${isEquipped ? 'SELECIONADO' : isUnlocked ? 'SELECIONAR' : 'DESBLOQUEAR'}
+                    <div class="shop-price-tag">${isSecretLocked ? '🏆 RECOMPENSA SECRETA' : char.price === 0 ? 'INICIAL' : `🪙 ${char.price.toLocaleString('pt-BR')}`}</div>
+                    <button class="btn-shop-action ${isEquipped ? 'btn-active' : ''} ${isSecretLocked ? 'btn-disabled' : ''}" ${isSecretLocked ? 'disabled' : ''}>
+                        ${isEquipped ? 'SELECIONADO' : isUnlocked ? 'SELECIONAR' : isSecretLocked ? 'BLOQUEADO' : 'DESBLOQUEAR'}
                     </button>
                 `;
 
                 const btn = card.querySelector('.btn-shop-action');
                 btn.addEventListener('click', () => {
                     audioSystem.playClick();
-                    if (isEquipped) return;
+                    if (isEquipped || isSecretLocked) return;
                     if (isUnlocked) {
                         this.saveSystem.data.selectedCharacter = id;
                         this.saveSystem.save();

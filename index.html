@@ -132,14 +132,16 @@
                     <div class="mode-badge-hot" style="background:#ff0055; color:#fff;">DIFICULDADE ALTA</div>
                     <div class="mode-icon">📜</div>
                     <h3 class="mode-name">Modo História</h3>
-                    <p class="mode-desc">Enfrente uma sequência implacável de 5 mestres com inteligência tática afiada e
-                        dano elevado.</p>
+                    <p class="mode-desc">Enfrente uma saga épica de 8 fases culminando em confrontos contra 3 novos chefões temáticos e o mítico Soberano do Tempo.</p>
                     <ul class="mode-features">
                         <li>Fase 1: Recruta Novato (Agressivo)</li>
-                        <li>Fase 2: Guarda de Ferro (Muralha)</li>
-                        <li>Fase 3: Ninja das Sombras (Ágil)</li>
+                        <li>Fase 2: Guarda de Ferro (A Muralha de Neo-Tokyo)</li>
+                        <li>Fase 3: Ninja das Sombras (Vento Silencioso)</li>
                         <li>Fase 4: Mestre Ronin (Lâmina Flamejante)</li>
-                        <li>Fase 5: Lorde do Vazio (Boss Supremo)</li>
+                        <li>Fase 5: Valkyria Neon (Sentinela Celeste - BOSS)</li>
+                        <li>Fase 6: Titã Mecha-Goliath (Demolidor Cibernético - BOSS)</li>
+                        <li>Fase 7: Lorde do Vazio (Flagelo Cósmico - BOSS)</li>
+                        <li>Fase 8: Chronos, o Soberano do Tempo (BOSS FINAL) 👑</li>
                     </ul>
                     <button id="btn-play-story" class="btn-mode-start btn-gold">INICIAR HISTÓRIA</button>
                 </div>
@@ -602,6 +604,36 @@
                         NOVAMENTE</button>
                     <button id="btn-defeat-menu" class="btn-modal btn-dark">
                         <span class="btn-icon">🏠</span> MENU PRINCIPAL
+                    </button>
+            </div>
+        </div>
+
+        <!-- MODAL DE DESBLOQUEIO DO PERSONAGEM SECRETO (CHRONOS) -->
+        <div id="modal-secret-unlock" class="game-modal-backdrop hidden">
+            <div class="game-modal-box secret-unlock-box">
+                <div class="secret-stars-banner">✨ 👑 ✨</div>
+                <h2 class="modal-title neon-gold-title">GUERREIRO SUPREMO DESPERTADO!</h2>
+                <p class="modal-subtext">Você derrotou Chronos e conquistou a glória eterna no Modo História!</p>
+                <div class="secret-char-showcase">
+                    <div class="secret-char-avatar-ring">⏳</div>
+                    <h3 class="secret-char-name">CHRONOS: O SOBERANO DO TEMPO</h3>
+                    <span class="secret-char-badge">PERSONAGEM LENDÁRIO / SECRETO DESBLOQUEADO</span>
+                    <p class="secret-char-flavor">Domina a Distorção Temporal e cortes estelares pentagonais em hipervelocidade. Possui auréola celestial e domínio quântico do combate.</p>
+                    <div class="secret-char-attributes">
+                        <div class="secret-attr"><span>❤️ Vida:</span> <strong>165</strong></div>
+                        <div class="secret-attr"><span>⚔️ Dano:</span> <strong>44</strong></div>
+                        <div class="secret-attr"><span>⚡ Vel:</span> <strong>8.8</strong></div>
+                        <div class="secret-attr"><span>🛡️ Def:</span> <strong>18</strong></div>
+                        <div class="secret-attr"><span>🎯 Crítico:</span> <strong>26%</strong></div>
+                        <div class="secret-attr"><span>🌀 Especial:</span> <strong>Distorção Temporal</strong></div>
+                    </div>
+                </div>
+                <div class="modal-buttons-row">
+                    <button id="btn-secret-equip-now" class="btn-modal btn-primary btn-gold">
+                        <span class="btn-icon">⚡</span> EQUIPAR AGORA
+                    </button>
+                    <button id="btn-secret-close" class="btn-modal btn-dark">
+                        CONTINUAR
                     </button>
                 </div>
             </div>

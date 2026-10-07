@@ -1960,3 +1960,187 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==================== NOVO MODAL: PERSONAGEM SECRETO (CHRONOS) ==================== */
+.secret-unlock-box {
+    border: 2px solid var(--neon-gold) !important;
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.45), inset 0 0 25px rgba(157, 78, 221, 0.2) !important;
+    animation: secretBoxGlow 2.5s infinite alternate ease-in-out;
+}
+
+@keyframes secretBoxGlow {
+    0% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+        border-color: #ffd700;
+    }
+    100% {
+        box-shadow: 0 0 45px rgba(255, 215, 0, 0.65), 0 0 20px rgba(157, 78, 221, 0.4);
+        border-color: #ffe600;
+    }
+}
+
+.secret-stars-banner {
+    font-size: 2.2rem;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 12px gold);
+    animation: pulseScale 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes pulseScale {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+.secret-char-showcase {
+    background: rgba(10, 12, 20, 0.65);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.secret-char-avatar-ring {
+    font-size: 3.2rem;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent);
+    border-radius: 50%;
+    border: 2px solid #ffd700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 22px rgba(255, 215, 0, 0.5);
+}
+
+.secret-char-name {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    letter-spacing: 0.5px;
+}
+
+.secret-char-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff0055, #9d4edd);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin: 8px 0;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+}
+
+.secret-char-flavor {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.45;
+}
+
+.secret-char-attributes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    font-size: 0.78rem;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.secret-attr span {
+    color: var(--text-muted);
+}
+
+.secret-attr strong {
+    color: #fff;
+    font-family: var(--font-heading);
+}
+
+/* ==================== BADGES DE HABILIDADES E PERKS NA LOJA ==================== */
+.shop-char-skill-badge {
+    font-size: 0.73rem;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    color: #00f0ff;
+    padding: 4px 9px;
+    border-radius: 6px;
+    margin: 6px 0 4px 0;
+    display: inline-block;
+}
+
+.shop-char-skill-desc {
+    font-size: 0.72rem;
+    color: #cbd5e1;
+    font-style: italic;
+    margin-bottom: 8px;
+    line-height: 1.35;
+}
+
+.secret-char-hint {
+    font-size: 0.72rem;
+    color: #ffd166;
+    font-weight: 600;
+    padding: 6px 8px;
+    background: rgba(255, 209, 102, 0.12);
+    border-radius: 6px;
+    margin: 6px 0;
+    border: 1px dashed rgba(255, 209, 102, 0.35);
+}
+
+.weapon-perk-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+.perk-poison {
+    background: rgba(56, 176, 0, 0.2);
+    color: #70e000;
+    border: 1px solid rgba(112, 224, 0, 0.45);
+}
+
+.perk-crush {
+    background: rgba(255, 0, 85, 0.2);
+    color: #ff0055;
+    border: 1px solid rgba(255, 0, 85, 0.45);
+}
+
+.perk-lightning {
+    background: rgba(0, 240, 255, 0.2);
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.45);
+}
+
+.perk-lifesteal {
+    background: rgba(6, 214, 160, 0.2);
+    color: #06d6a0;
+    border: 1px solid rgba(6, 214, 160, 0.45);
+}
+
+.perk-prism {
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.45);
+}
+
+.perk-fire {
+    background: rgba(255, 84, 0, 0.2);
+    color: #ff5400;
+    border: 1px solid rgba(255, 84, 0, 0.45);
+}
+
+.perk-shadow {
+    background: rgba(157, 78, 221, 0.2);
+    color: #9d4edd;
+    border: 1px solid rgba(157, 78, 221, 0.45);
+}
